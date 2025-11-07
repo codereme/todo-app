@@ -3,29 +3,22 @@ import { Task } from "./models/Task.js";
 let tasks = [];
 
 function init() {
+  loadFromLocalStorage();
   setupAddEventListeners();
+  renderAllTasks();
 }
 
-function setupAddEventListeners() {
-  const form = document.getElementById("taskForm");
-  form.addEventListener("submit", handleFormSubmit);
+function saveToLocalStorage() {
+  localStorage.setItem("tasks", JSON.stringify(tasks));
+  console.log("tasks saved", tasks);
 }
 
-function handleFormSubmit(e) {
-  e.preventDefault();
-  const input = document.getElementById("taskInput");
-  const text = input.value.trim();
-
-  if (text) {
-    addTask(text);
-    input.value = "";
+function loadFromLocalStorage() {
+  const savedTasks = localStorage.getItem("tasks");
+  if (savedTasks) {
+    tasks = JSON.parse(savedTasks);
+    console.log("tasks loaded", tasks);
   }
-}
-
-function addTask(text) {
-  const task = new Task(text);
-  tasks.push(task);
-  displayTasks(task);
 }
 
 function displayTasks(task) {
@@ -49,21 +42,15 @@ function displayTasks(task) {
   deleteBtn.textContent = "-";
   deleteBtn.addEventListener("click", () => deleteTask(task.id));
 
+  if (task.completed) {
+    taskText.style.textDecoration = "line-through";
+    taskText.style.color = "#888";
+  }
+
   taskItem.appendChild(checkbox);
   taskItem.appendChild(taskText);
   taskItem.appendChild(deleteBtn);
   tasksList.appendChild(taskItem);
-}
-
-function toggleTaskCompleted(taskId) {
-  // Find the task and toggle completed status
-  const task = tasks.find((task) => task.id === taskId);
-  if (task) {
-    task.completed = !task.completed;
-
-    // Update the UI
-    updateTaskDisplay(taskId);
-  }
 }
 
 function updateTaskDisplay(taskId) {
@@ -85,6 +72,20 @@ function updateTaskDisplay(taskId) {
   }
 }
 
+function renderAllTasks() {
+  const taskList = document.getElementById("taskList");
+  taskList.innerHTML = "";
+
+  tasks.forEach((task) => displayTasks(task));
+}
+
+function addTask(text) {
+  const task = new Task(text);
+  tasks.push(task);
+  displayTasks(task);
+  saveToLocalStorage();
+}
+
 function deleteTask(taskId) {
   // Remove from tasks array - keep only tasks that don't match the ID to delete
   tasks = tasks.filter((task) => task.id !== taskId);
@@ -95,6 +96,35 @@ function deleteTask(taskId) {
   if (taskElement) {
     taskElement.remove();
   }
+  saveToLocalStorage();
+}
+
+function toggleTaskCompleted(taskId) {
+  // Find the task and toggle completed status
+  const task = tasks.find((task) => task.id === taskId);
+  if (task) {
+    task.completed = !task.completed;
+
+    // Update the UI
+    updateTaskDisplay(taskId);
+    saveToLocalStorage();
+  }
+}
+
+function handleFormSubmit(e) {
+  e.preventDefault();
+  const input = document.getElementById("taskInput");
+  const text = input.value.trim();
+
+  if (text) {
+    addTask(text);
+    input.value = "";
+  }
+}
+
+function setupAddEventListeners() {
+  const form = document.getElementById("taskForm");
+  form.addEventListener("submit", handleFormSubmit);
 }
 
 init();
