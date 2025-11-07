@@ -65,7 +65,7 @@ body {
 }
 .task-item {
   display: flex;
-  justify-content: space-between;
+  align-items: center;
 
   padding: 15px;
   margin: 10px 0;
@@ -87,4 +87,16 @@ body {
 }
 .delete-btn:hover {
   background-color: #c0392b;
+}
+.task-item input[type="checkbox"] {
+  margin-right: 10px;
+  cursor: pointer;
+}
+.task-content {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.task-text {
+  flex: 1;
 }
