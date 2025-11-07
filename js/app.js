@@ -30,15 +30,36 @@ function addTask(text) {
 
 function displayTasks(task) {
   const tasksList = document.getElementById("taskList");
+
   const taskItem = document.createElement("li");
   taskItem.className = "task-item";
+  taskItem.setAttribute("data-task-id", task.id); // for delete task
 
   const taskText = document.createElement("p");
   taskText.className = "task-text";
   taskText.textContent = task.text;
 
+  const deleteBtn = document.createElement("button");
+  deleteBtn.className = "delete-btn";
+  deleteBtn.textContent = "-";
+  deleteBtn.addEventListener("click", () => deleteTask(task.id));
+
   taskItem.appendChild(taskText);
+  taskItem.appendChild(deleteBtn);
   tasksList.appendChild(taskItem);
+}
+
+function deleteTask(taskId) {
+  // Remove from tasks array - keep only tasks that don't match the ID to delete
+  tasks = tasks.filter((task) => task.id !== taskId);
+
+  // Remove from DOM
+  const taskElement = document.querySelector(`[data-task-id="${taskId}"]`);
+  console.log("elemento", taskElement);
+
+  if (taskElement) {
+    taskElement.remove();
+  }
 }
 
 init();
