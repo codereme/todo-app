@@ -60,3 +60,14 @@ body {
 .button:hover {
   background-color: var(--primary-hover);
 }
+.tasks-list {
+  list-style: none;
+}
+.task-item {
+  padding: 15px;
+  margin: 10px 0;
+  border-radius: 8px;
+  border-left: 4px solid var(--primary);
+  background-color: var(--surface);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}

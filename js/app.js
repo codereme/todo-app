@@ -25,7 +25,20 @@ function handleFormSubmit(e) {
 function addTask(text) {
   const task = new Task(text);
   tasks.push(task);
-  console.log(task);
+  displayTasks(task);
+}
+
+function displayTasks(task) {
+  const tasksList = document.getElementById("taskList");
+  const taskItem = document.createElement("li");
+  taskItem.className = "task-item";
+
+  const taskText = document.createElement("p");
+  taskText.className = "task-text";
+  taskText.textContent = task.text;
+
+  taskItem.appendChild(taskText);
+  tasksList.appendChild(taskItem);
 }
 
 init();
